@@ -5,7 +5,7 @@
 typedef unsigned short (*cmp)(void*,void*);
 
 typedef struct {
-    void *base;
+    void* base;
     unsigned int size;
     size_t capacity;
     size_t item_size;

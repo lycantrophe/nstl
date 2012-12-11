@@ -2,6 +2,8 @@
 #define STACK_H
 #include "vector.h"
 
+#define stack(typesize, icap) vector(typesize,icap);
+
 /*
  * The stack, a FIFO priority queue, extends the vector by adding the pop
  * method.

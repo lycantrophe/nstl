@@ -2,6 +2,8 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
+#define EXTRA_ALLOC_LIMIT 32
+
 typedef unsigned short (*cmp)(void*,void*);
 
 typedef struct {
@@ -27,5 +29,10 @@ extern void push( Vector*, void* );
  * argument is less than the second argument.
  */
 extern void* find( Vector*, cmp lt, void* target );
+
+/*
+ * Inserts the elements from vector ins into vector orig at position pos.
+ */
+extern void insert_vector( Vector* orig, Vector* ins, unsigned int pos );
 
 #endif //VECTOR_H

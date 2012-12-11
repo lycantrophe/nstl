@@ -20,7 +20,6 @@ void push( Vector* V, void* item ) {
     void* dst = ((char*)V->base) + V->item_size * V->size;
     memcpy( dst, item, V->item_size );
     ++V->size;
-    free( item );
 }
 
 void* find( Vector* V, cmp lt, void* target ) {

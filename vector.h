@@ -24,6 +24,12 @@ extern Vector* vector( size_t typesize, size_t icap );
 extern void push( Vector*, void* );
 
 /*
+ * Works like the [] operator - looks up element index in the vector.
+ * Checks for boundry errors.
+ */
+extern void* at( Vector*, unsigned int );
+
+/*
  * Binary search the vector, looking for the target element. Takes a function
  * pointer to a comparison function that should return positive if the first
  * argument is less than the second argument.

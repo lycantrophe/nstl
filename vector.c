@@ -23,6 +23,11 @@ void push( Vector* V, void* item ) {
     ++V->size;
 }
 
+void* at( Vector* V, unsigned int index ) {
+    assert( index < V->size );
+    return (char*)V->base + ( V->item_size * index );
+}
+
 void* find( Vector* V, cmp lt, void* target ) {
     unsigned int min = 0;
     unsigned int max = V->size;

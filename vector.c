@@ -52,25 +52,25 @@ void insert_vector( Vector* orig, Vector* ins, unsigned int pos ) {
     size_t size = orig->item_size; 
 
     size_t new_capacity = orig->capacity;
-    char* base = orig->base;
+    void* base = orig->base;
 
     /* Do we need more memory? */
-    if( ( orig->size + ins->size ) * size < orig->capacity )
+    if( ( orig->size + ins->size ) * size >= orig->capacity )
         new_capacity = ( orig->size + ins->size ) * size;
 
-    if( new_capacity < orig->capacity - EXTRA_ALLOC_LIMIT )
+    if( new_capacity - EXTRA_ALLOC_LIMIT <= size *( orig->size + ins->size ) )
         new_capacity *= 2;
 
     /* move the first pos elements */
     if( new_capacity != orig->capacity )
-        base = memcpy( malloc( new_capacity ), base, pos * size );
+        base = memmove( malloc( new_capacity ), base, pos * size );
 
     // Moves the right part of the original vector, making a hole in the middle
-    memcpy( base + ( pos + ins->size ) * size,
+    memcpy( (char*)base + ( pos + ins->size ) * size,
             (char*)orig->base + ( pos * size ), ( orig->size - pos ) * size );
 
     // Place the new vector in between
-    memcpy( base + ( pos * size ), ins->base, ins->size * size );
+    memmove( (char*)base + ( pos * size ), ins->base, ins->size * size );
 
     free( orig->base );
     orig->base = base;

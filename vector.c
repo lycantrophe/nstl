@@ -24,8 +24,14 @@ void push( Vector* V, void* item ) {
 }
 
 void* at( Vector* V, unsigned int index ) {
-    assert( index < V->size );
+    assert( index <= V->size );
     return (char*)V->base + ( V->item_size * index );
+}
+
+void* get( Vector* V, unsigned int index ) {
+    assert( index <= V->size );
+    return memcpy( malloc( V->item_size ), 
+        (char*)V->base + ( V->item_size * index ), V->item_size );
 }
 
 void* find( Vector* V, cmp lt, void* target ) {

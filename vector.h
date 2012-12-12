@@ -25,9 +25,17 @@ extern void push( Vector*, void* );
 
 /*
  * Works like the [] operator - looks up element index in the vector.
- * Checks for boundry errors.
+ * Checks for boundry errors. Returns a pointer to, not a copy. See get.
  */
 extern void* at( Vector*, unsigned int );
+
+/*
+ * Works like the [] operator - looks up element index in the vector.
+ * Checks for boundry errors. Returns a copy, not a pointer to the element.
+ * Remember to free
+ */
+extern void* get( Vector*, unsigned int );
+
 
 /*
  * Binary search the vector, looking for the target element. Takes a function

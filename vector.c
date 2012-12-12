@@ -13,9 +13,9 @@ Vector* vector( size_t typesize, size_t icap ) {
 }
 
 void push( Vector* V, void* item ) {
-    if( V->size == V->capacity ) {
+    if( V->item_size * V->size == V->capacity ) {
         V->capacity *= 2;
-        V->base = realloc( V->base, V->item_size * V->capacity );
+        V->base = realloc( V->base, V->capacity );
     }
 
     void* dst = ((char*)V->base) + V->item_size * V->size;

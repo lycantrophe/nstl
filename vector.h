@@ -1,8 +1,11 @@
-#include <stdlib.h>
 #ifndef VECTOR_H
 #define VECTOR_H
+#include <stdlib.h>
 
 #define EXTRA_ALLOC_LIMIT 32
+
+// Concatenates two vectors
+#define concat(V1, V2) insert_vector(V1,V2,V1->size)
 
 typedef unsigned short (*cmp)(void*,void*);
 
@@ -35,7 +38,6 @@ extern void* at( Vector*, unsigned int );
  * Remember to free
  */
 extern void* get( Vector*, unsigned int );
-
 
 /*
  * Binary search the vector, looking for the target element. Takes a function

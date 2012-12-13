@@ -4,13 +4,16 @@
 
 Queue* queue( size_t typesize, unsigned int icap ) {
     Queue* Q = malloc( sizeof( Queue ) );
-    Q->V = vector(typesize, icap);
-    Q->first = Q->V->base;
+    Q->V.base = malloc( icap * typesize );
+    Q->V.size = 0;
+    Q->V.item_size = typesize;
+    Q->V.capacity = icap;
+    Q->first = Q->V.base;
     return Q;
 }
 
 static unsigned int move( Queue* Q ) {
-    Vector* V = Q->V;
+    Vector* V = &Q->V;
     unsigned int offset = ( (char*)Q->first - (char*)V->base ) / V->item_size;
 
     size_t bytes = ( V->size - offset ) * V->item_size;
@@ -21,7 +24,7 @@ static unsigned int move( Queue* Q ) {
 }
 
 void enqueue( Queue* Q, void* item ) {
-    Vector* V = Q->V;
+    Vector* V = &Q->V;
     unsigned int first = ( (char*)Q->first - (char*)V->base ) / V->item_size;
     unsigned int type_cap = V->capacity / V->item_size;
     unsigned int move_threshold = type_cap / 10;
@@ -42,16 +45,10 @@ void enqueue( Queue* Q, void* item ) {
 }
 
 void* dequeue( Queue* Q ) {
-    assert( Q->V->size );
+    assert( Q->V.size );
 
     void* retptr = Q->first;
-    Q->first = (char*)Q->first + Q->V->item_size;
+    Q->first = (char*)Q->first + Q->V.item_size;
 
-    return memcpy( malloc( Q->V->item_size ), retptr, Q->V->item_size );
-}
-
-void unqueue( Queue **Q ) {
-    free( (*Q)->V );
-    free( *Q );
-    *Q = NULL;
+    return memcpy( malloc( Q->V.item_size ), retptr, Q->V.item_size );
 }

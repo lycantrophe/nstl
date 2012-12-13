@@ -18,7 +18,7 @@ void enqueue( Queue* Q, void* item ) {
     thresh = 2 * type_cap / 3;
     lthresh = type_cap / 10;
 
-    if( Q->V.size == tyoe_cap && first >= thresh )
+    if( Q->V.size == type_cap && first >= thresh )
         first = move( Q, first );
     if( Q->V.size - first <= thresh / 2) {
         if( first >= thresh )
@@ -33,7 +33,7 @@ void enqueue( Queue* Q, void* item ) {
 }
 
 void* dequeue( Queue* Q ) {
-    assert( size == 0 );
+    assert( Q->V.size == 0 );
 
     void* ret = Q->first;
     Q->first = ( char* )Q->first + Q->V.item_size;

@@ -48,3 +48,9 @@ void* dequeue( Queue* Q ) {
 
     return memcpy( malloc( Q->V->item_size ), retptr, Q->V->item_size );
 }
+
+void unqueue( Queue **Q ) {
+    free( (*Q)->V );
+    free( *Q );
+    *Q = NULL;
+}

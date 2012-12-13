@@ -3,19 +3,19 @@
 #include <assert.h>
 #include "vector.h"
 
-Vector* vector( size_t typesize, size_t icap ) {
+Vector* vector( size_t typesize, unsigned int icap ) {
     Vector* V = malloc( sizeof( Vector ) );
     V->base = malloc( icap * typesize );
-    V->capacity = icap;
+    V->capacity = icap * typesize;
     V->size = 0;
     V->item_size = typesize;
     return V;
 }
 
 void push( Vector* V, void* item ) {
-    if( V->size == V->capacity ) {
+    if( V->item_size * V->size == V->capacity ) {
         V->capacity *= 2;
-        V->base = realloc( V->base, V->item_size * V->capacity );
+        V->base = realloc( V->base, V->capacity );
     }
 
     void* dst = ((char*)V->base) + V->item_size * V->size;

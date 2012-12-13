@@ -19,7 +19,7 @@ typedef struct {
 /*
  * Creates a new vector.
  */
-extern Vector* vector( size_t typesize, size_t icap );
+extern Vector* vector( size_t typesize, unsigned int icap );
 
 /*
  * Insert an element at the back of the vector.

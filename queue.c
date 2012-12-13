@@ -1,43 +1,55 @@
+#include <assert.h>
 #include "queue.h"
+#include "vector.h"
 
-static int move( Queue* Q, unsigned long first ) {
-    memmove( Q->V->base, Q->first,
-            first - ( unsigned long ) Q->V->base * Q->V->item_size );
+Queue* queue( size_t typesize, unsigned int icap ) {
+    Queue* Q = malloc( sizeof( Queue ) );
+    Q->V.base = malloc( icap * typesize );
+    Q->V.size = 0;
+    Q->V.item_size = typesize;
+    Q->V.capacity = icap;
+    Q->first = Q->V.base;
+    return Q;
+}
 
-    Q->V->size -= first;
-    Q->first = Q->V->base;
+static unsigned int move( Queue* Q ) {
+    Vector* V = &Q->V;
+    unsigned int offset = ( (char*)Q->first - (char*)V->base ) / V->item_size;
 
-    return ( Q->first - Q->V->base ) / Q->V->item_size;
+    size_t bytes = ( V->size - offset ) * V->item_size;
+    Q->first = memmove( V->base, Q->first, bytes );
+
+    V->size -= offset;
+    return 0;
 }
 
 void enqueue( Queue* Q, void* item ) {
-    unsigned long first, type_cap, thresh, lthresh;
+    Vector* V = &Q->V;
+    unsigned int first = ( (char*)Q->first - (char*)V->base ) / V->item_size;
+    unsigned int type_cap = Q->V.capacity / Q->V.item_size;
+    unsigned int move_threshold = type_cap / 10;
 
-    first = ( Q->first - Q->V->base ) / Q->V->item_size;
-    type_cap = Q->V->capacity / Q->V->item_size;
-    thresh = 2 * type_cap / 3;
-    lthresh = type_cap / 10;
+    if( V->size == type_cap && first >= move_threshold )
+        first = move( Q );
 
-    if( Q->V->size == type_cap && first >= thresh )
-        first = move( Q, first );
-    if( Q->V->size - first <= thresh / 2) {
-        if( first >= thresh )
-            first = move( Q, first );
+    size_t used = ( V->size - first ) * V->item_size;
+    if( V->capacity - used > 2*V->capacity / 3 ) {
+        if( first >= move_threshold )
+            first = move( Q );
         else
-          Q->V->base = realloc( Q->V->base, Q->V->capacity /= 2);
+            V->base = realloc( V->base, V->capacity /= 2 );
     }
-    if( first >= lthresh )
-        move( Q, first );
 
-    push( Q->V, item );
+    push( V, item );
+    Q->first = (char*)V->base + ( first * V->item_size );
 }
 
 void* dequeue( Queue* Q ) {
-    assert( Q->V->size == 0 );
+    assert( Q->V.size );
 
-    void* ret = Q->first;
-    Q->first = ( char* )Q->first + Q->V->item_size;
+    void* retptr = Q->first;
+    Q->first = (char*)Q->first + Q->V.item_size;
+    --Q->V.size;
 
-    return ret;
+    return memcpy( malloc( Q->V.item_size ), retptr, Q->V.item_size );
 }
-

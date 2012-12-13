@@ -3,15 +3,17 @@
 
 #include <string.h>
 #include "vector.h"
-#include "assert.h"
 
 typedef struct {
-    Vector *V;
+    Vector V;
     void* first;
 } Queue;
 
-void enqueue(Queue*, void*);
-void* dequeue(Queue*);
+/*
+ * Creates a new queue
+ */
+extern Queue* queue( size_t typesize, unsigned int icap );
+extern void enqueue( Queue*, void* );
+extern void* dequeue( Queue* );
 
-#endif
-
+#endif //QUEUE_H

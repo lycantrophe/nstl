@@ -1,7 +1,8 @@
 #include "queue.h"
 
 static move( Queue* Q, unsigned long first ) {
-    memmove( Q->V.base, Q->first, first - ( unsigned long ) Q->V.base );
+    memmove( Q->V.base, Q->first,
+            first - ( unsigned long ) Q->V.base * Q->V.item_size );
     Q->V.size -= first;
     Q->first = Q->V.base;
 }
@@ -9,7 +10,7 @@ static move( Queue* Q, unsigned long first ) {
 void enqueue( Queue* Q, void* item ) {
     unsigned long first = ( Q->first - Q->V.base ) / Q->V.item_size;
     unsigned long thresh = 2 * ( Q->V.capacity / Q->V.item_size ) / 3;
-    unsigned long lthresh = ( Q->V.capacity / Q->V.item_size ) - thresh;
+    unsigned long lthresh = ( Q->V.capacity / Q->V.item_size ) / 10;
 
     if( Q->V.size == Q->V.capacity / Q->V.item_size && first >= thresh ) {
         move( Q, first );

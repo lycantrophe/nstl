@@ -3,8 +3,10 @@
 static int move( Queue* Q, unsigned long first ) {
     memmove( Q->V.base, Q->first,
             first - ( unsigned long ) Q->V.base * Q->V.item_size );
+
     Q->V.size -= first;
     Q->first = Q->V.base;
+
     return ( Q->first - Q->V.base ) / Q->V.item_size;
 }
 
@@ -29,3 +31,13 @@ void enqueue( Queue* Q, void* item ) {
 
     push( &Q->V, item );
 }
+
+void* dequeue( Queue* Q ) {
+    assert( size == 0 );
+
+    void* ret = Q->first;
+    Q->first = ( char* )Q->first + Q->V.item_size;
+
+    return ret;
+}
+

@@ -9,4 +9,8 @@ typedef struct {
     void* first;
 } Queue;
 
+void enqueue(Queue*, void*);
+Vector* dequeue(Queue*);
+
 #endif
+

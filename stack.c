@@ -1,3 +1,5 @@
+#include <stdlib.h>
+#include <string.h>
 #include "stack.h"
 #include "vector.h"
 
@@ -10,5 +12,6 @@ void* pop( Vector* V ) {
         V->base = realloc( V->base, V->capacity );
     }
 
-    return (char*)V->base + ( --( V->size ) * V->item_size );
+    void* retptr = (char*)V->base + ( --( V->size ) * V->item_size );
+    return memcpy( malloc( V->item_size ), retptr, V->item_size );
 }

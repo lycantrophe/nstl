@@ -3,14 +3,15 @@
 
 #include <string.h>
 #include "vector.h"
+#include "assert.h"
 
 typedef struct {
-    Vector V;
+    Vector *V;
     void* first;
 } Queue;
 
 void enqueue(Queue*, void*);
-Vector* dequeue(Queue*);
+void* dequeue(Queue*);
 
 #endif
 

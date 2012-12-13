@@ -4,13 +4,13 @@
 
 #define stack(typesize, icap) vector(typesize,icap);
 
-typedef Stack Vector
+typedef Vector Stack;
 
 /*
  * The stack, a FIFO priority queue, extends the vector by adding the pop
  * method.
  */
-extern void* pop( Stack* V );
-extern void push( Stack );
+extern void* pop( Stack*);
+extern void push( Stack*, void* );
 
 #endif //STACK_H

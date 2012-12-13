@@ -1,32 +1,31 @@
 #include "queue.h"
 
-static move( Queue* Q, unsigned long first ) {
+static int move( Queue* Q, unsigned long first ) {
     memmove( Q->V.base, Q->first,
             first - ( unsigned long ) Q->V.base * Q->V.item_size );
     Q->V.size -= first;
     Q->first = Q->V.base;
+    return ( Q->first - Q->V.base ) / Q->V.item_size;
 }
 
 void enqueue( Queue* Q, void* item ) {
-    unsigned long first = ( Q->first - Q->V.base ) / Q->V.item_size;
-    unsigned long thresh = 2 * ( Q->V.capacity / Q->V.item_size ) / 3;
-    unsigned long lthresh = ( Q->V.capacity / Q->V.item_size ) / 10;
+    unsigned long first, type_cap, thresh, lthresh;
 
-    if( Q->V.size == Q->V.capacity / Q->V.item_size && first >= thresh ) {
-        move( Q, first );
-        first = ( Q->first - Q->V.base ) / Q->V.item_size;
-    }
+    first = ( Q->first - Q->V.base ) / Q->V.item_size;
+    type_cap = Q->V.capacity / Q->V.item_size;
+    thresh = 2 * type_cap / 3;
+    lthresh = type_cap / 10;
+
+    if( Q->V.size == tyoe_cap && first >= thresh )
+        first = move( Q, first );
     if( Q->V.size - first <= thresh / 2) {
-        if( first >= thresh ) {
-            move( Q, first );
-            first = ( Q->first - Q->V.base ) / Q->V.item_size;
-        }
+        if( first >= thresh )
+            first = move( Q, first );
         else
           Q->V.base = realloc( Q->V.base, Q->V.capacity /= 2);
     }
-    if( first >= lthresh ) {
+    if( first >= lthresh )
         move( Q, first );
-    }
 
     push( &Q->V, item );
 }

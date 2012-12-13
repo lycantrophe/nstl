@@ -3,10 +3,10 @@
 #include <assert.h>
 #include "vector.h"
 
-Vector* vector( size_t typesize, size_t icap ) {
+Vector* vector( size_t typesize, unsigned int icap ) {
     Vector* V = malloc( sizeof( Vector ) );
     V->base = malloc( icap * typesize );
-    V->capacity = icap;
+    V->capacity = icap * typesize;
     V->size = 0;
     V->item_size = typesize;
     return V;

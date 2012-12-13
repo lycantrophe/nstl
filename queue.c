@@ -5,6 +5,7 @@
 Queue* queue( size_t typesize, unsigned int icap ) {
     Queue* Q = malloc( sizeof( Queue ) );
     Q->V = vector(typesize, icap);
+    Q->first = Q->V->base;
     return Q;
 }
 

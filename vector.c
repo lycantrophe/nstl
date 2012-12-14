@@ -2,14 +2,18 @@
 #include <string.h>
 #include <assert.h>
 #include "vector.h"
+#include "vector-private.h"
 
-Vector* vector( size_t typesize, unsigned int icap ) {
-    Vector* V = malloc( sizeof( Vector ) );
+Vector* __initialize_vector( Vector* V, size_t typesize, unsigned int icap ) {
     V->base = malloc( icap * typesize );
     V->capacity = icap * typesize;
     V->size = 0;
     V->item_size = typesize;
     return V;
+}
+
+Vector* vector( size_t typesize, unsigned int icap ) {
+    return __initialize_vector( malloc( sizeof( Vector ) ), typesize, icap );
 }
 
 void push( Vector* V, void* item ) {

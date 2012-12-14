@@ -1,16 +1,12 @@
 #include <assert.h>
 #include "queue.h"
 #include "vector.h"
+#include "vector-private.h"
 
 Queue* queue( size_t typesize, unsigned int icap ) {
     Queue* Q = malloc( sizeof( Queue ) );
-    Q->V.base = malloc( icap * typesize );
-    Q->V.size = 0;
-    Q->V.item_size = typesize;
-    Q->V.capacity = icap;
-    Q->items = Q->V.size = 0;
-    Q->V.item_size = typesize;
-    Q->V.capacity = icap * typesize;
+    __initialize_vector( &Q->V, typesize, icap );
+    Q->items = Q->V.size; // = 0;
     Q->first = Q->V.base;
     return Q;
 }

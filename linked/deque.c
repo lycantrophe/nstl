@@ -12,6 +12,7 @@ Deque* deque( void ) {
 
 void deenqueue( Deque* D, void* payload ) {
     D->tail = link( D->tail, payload );
+    /* Set head pointer as well if this is the first (and only) element */
     if( !D->head ) D->head = D->tail;
     ++D->size;
 }

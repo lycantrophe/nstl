@@ -31,6 +31,7 @@ void enqueue( Queue* Q, void* item ) {
     if( V->size == type_cap && V->size - Q->items > type_cap / 4 ) 
         move( Q );
 
+    /* Calculate first/base offset in case push causes a realloc */
     size_t offset = (char*)Q->first - (char*)V->base;
     push( V, item );
     ++Q->items;

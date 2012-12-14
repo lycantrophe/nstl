@@ -13,11 +13,15 @@ Vector* vector( size_t typesize, unsigned int icap ) {
 }
 
 void push( Vector* V, void* item ) {
+    /* When all free slots have been filled -
+     * double capacity.
+     */
     if( V->item_size * V->size == V->capacity ) {
         V->capacity *= 2;
         V->base = realloc( V->base, V->capacity );
     }
 
+    /* Make a copy of the item and insert into the vector */
     void* dst = ((char*)V->base) + V->item_size * V->size;
     memcpy( dst, item, V->item_size );
     ++V->size;
@@ -39,10 +43,13 @@ void* find( Vector* V, cmp lt, void* target ) {
 
     while( max >= min ) {
         unsigned int mid = min + ( ( max - min ) / 2 );
+        /* if Vector[ mid ] < target */
         if( lt( &((char*)V->base)[ mid * V->item_size ], target ) )
             min = mid + 1;
+        /* if target < Vector[ mid ] */
         else if( lt( target, &((char*)V->base)[ mid * V->item_size ] ) )
             max = mid - 1;
+        /* target == Vector[ mid ] */
         else
             return &( (char*)V->base )[ mid * V->item_size ];
     }
@@ -70,11 +77,11 @@ void insert_vector( Vector* orig, Vector* ins, unsigned int pos ) {
     if( new_capacity != orig->capacity )
         base = memmove( malloc( new_capacity ), base, pos * size );
 
-    // Moves the right part of the original vector, making a hole in the middle
+    /* Moves the right part of the vector, making a hole in the middle */
     memcpy( (char*)base + ( pos + ins->size ) * size,
             (char*)orig->base + ( pos * size ), ( orig->size - pos ) * size );
 
-    // Place the new vector in between
+    /* Place the new vector in between */
     memmove( (char*)base + ( pos * size ), ins->base, ins->size * size );
 
     free( orig->base );

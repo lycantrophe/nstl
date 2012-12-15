@@ -38,13 +38,6 @@ extern void* at( Vector*, unsigned int );
 extern void* get( Vector*, unsigned int );
 
 /*
- * Binary search the vector, looking for the target element. Takes a function
- * pointer to a comparison function that should return positive if the first
- * argument is less than the second argument.
- */
-extern void* find( Vector*, cmp lt, void* target );
-
-/*
  * Inserts the elements from vector ins into vector orig at position pos.
  */
 extern void insert_vector( Vector* orig, Vector* ins, unsigned int pos );

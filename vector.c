@@ -41,25 +41,6 @@ void* get( Vector* V, unsigned int index ) {
     return memcpy( malloc( V->item_size ), at( V, index ), V->item_size );
 }
 
-void* find( Vector* V, cmp lt, void* target ) {
-    unsigned int min = 0;
-    unsigned int max = V->size;
-
-    while( max >= min ) {
-        unsigned int mid = min + ( ( max - min ) / 2 );
-        /* if Vector[ mid ] < target */
-        if( lt( &((char*)V->base)[ mid * V->item_size ], target ) )
-            min = mid + 1;
-        /* if target < Vector[ mid ] */
-        else if( lt( target, &((char*)V->base)[ mid * V->item_size ] ) )
-            max = mid - 1;
-        /* target == Vector[ mid ] */
-        else
-            return &( (char*)V->base )[ mid * V->item_size ];
-    }
-    return NULL;
-}
-
 void insert_vector( Vector* orig, Vector* ins, unsigned int pos ) {
     assert( orig->item_size == ins->item_size );
     assert( pos <= orig->size );

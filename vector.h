@@ -7,8 +7,6 @@
 // Concatenates two vectors
 #define concat(V1, V2) insert_vector(V1,V2,V1->size)
 
-typedef unsigned short (*cmp)(void*,void*);
-
 typedef struct {
     void* base;
     unsigned int size;

@@ -1,5 +1,6 @@
 #include <string.h>
 #include <assert.h>
+#include "nstl-types.h"
 #include "heap.h"
 #include "vector.h"
 

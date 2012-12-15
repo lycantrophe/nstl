@@ -3,6 +3,9 @@
 
 #include "../nstl-types.h"
 
+/*
+ * Plain insertion sort between high and low
+ */
 extern void insertion_sort( void *A, size_t, unsigned int, unsigned int, cmp );
 
 #endif //SORT_H

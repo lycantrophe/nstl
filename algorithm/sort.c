@@ -3,6 +3,11 @@
 #include "../nstl-types.h"
 #include "sort.h"
 
+/*
+ * Notice that sorts does NOT assert boundries. This is by design - a higher
+ * first than last shall return the same array
+ */
+
 static inline void* __at( void* A, unsigned int index, size_t typesize ) {
     return (char*)A + ( index * typesize );
 }
@@ -32,4 +37,12 @@ void insertion_sort( void* A, size_t typesize, unsigned int first, unsigned int 
         memmove( __at( A, hole, typesize ), item, typesize );
     }
     free( item );
+}
+
+void shell_sort( void* A, size_t typesize, unsigned int first, unsigned int last, cmp lt ) {
+    unsigned int gaps[] = { 701, 301, 132, 57, 23, 10, 4, 1 };
+    unsigned int *gap = gaps;
+
+    for( unsigned int i = 0; i < 8 && *gap > first; ++i, ++gap )
+        insertion_sort( A, typesize, *gap, last, lt );
 }

@@ -7,8 +7,6 @@
 // Concatenates two vectors
 #define concat(V1, V2) insert_vector(V1,V2,V1->size)
 
-typedef unsigned short (*cmp)(void*,void*);
-
 typedef struct {
     void* base;
     unsigned int size;
@@ -38,13 +36,6 @@ extern void* at( Vector*, unsigned int );
  * Remember to free
  */
 extern void* get( Vector*, unsigned int );
-
-/*
- * Binary search the vector, looking for the target element. Takes a function
- * pointer to a comparison function that should return positive if the first
- * argument is less than the second argument.
- */
-extern void* find( Vector*, cmp lt, void* target );
 
 /*
  * Inserts the elements from vector ins into vector orig at position pos.

@@ -1,5 +1,6 @@
 #include <string.h>
 #include <assert.h>
+#include "nstl-types.h"
 #include "heap.h"
 #include "vector.h"
 
@@ -25,12 +26,15 @@ inline static void swap( void* l, void* r, size_t size ) {
     free( tmp );
 }
 
+/* Comments wil assume max-heap, that is a less-than (<) compare */
+/* Situation is reversed for min-heap */
 static void heapify( Vector* V, cmp compare, unsigned int i ) {
     void* parent = at( V, i );
     void* largest = parent;
     unsigned int largest_index = i;
     unsigned int child = __heap_left( i );
 
+    /* Work with parent or left child? */
     if( child < V->size ) {
         void* left = at( V, child );
         if( compare( parent, left ) ) {
@@ -39,6 +43,7 @@ static void heapify( Vector* V, cmp compare, unsigned int i ) {
         }
     }
 
+    /* Work with right child? */
     if( ++child < V->size ) {
         void* right = at( V, child );
         if( compare( largest, right ) ) {
@@ -63,7 +68,7 @@ static void heap_increase_key( Vector* V, cmp compare, unsigned int i, void* key
     assert( !compare( key, at( V, i ) ) );
 
     memcpy( ((char*)V->base) + ( i * V->item_size ), key, V->item_size );
-    // V[ parent(i) ] < V[ i ]
+    /* V[ parent(i) ] < V[ i ] */
     while( i > 0 && compare( at( V, __heap_parent( i ) ), at( V, i ) ) ) {
         swap( at( V, __heap_parent( i ) ), at( V, i ), V->item_size );
         i = __heap_parent( i );
@@ -77,10 +82,10 @@ void heappush( Vector* V, cmp compare, void* item ) {
 
 void* heappop( Vector* V, cmp compare ) {
     void* max = get( V, 0 );
+    /* Move all memory left and reduce heap size */
     memmove( V->base, (char*)V->base + ( ( --V->size ) * V->item_size ),
             V->item_size );
 
     heapify( V, compare, 0 );
     return max;
 }
-

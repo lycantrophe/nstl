@@ -1,54 +1,44 @@
 #include <assert.h>
 #include "queue.h"
 #include "vector.h"
+#include "vector-private.h"
 
 Queue* queue( size_t typesize, unsigned int icap ) {
     Queue* Q = malloc( sizeof( Queue ) );
-    Q->V.base = malloc( icap * typesize );
-    Q->V.size = 0;
-    Q->V.item_size = typesize;
-    Q->V.capacity = icap;
+    __initialize_vector( &Q->V, typesize, icap );
+    Q->items = Q->V.size; // = 0;
     Q->first = Q->V.base;
     return Q;
 }
 
-static unsigned int move( Queue* Q ) {
+static inline void move( Queue* Q ) {
     Vector* V = &Q->V;
-    unsigned int offset = ( (char*)Q->first - (char*)V->base ) / V->item_size;
 
-    size_t bytes = ( V->size - offset ) * V->item_size;
+    size_t bytes = Q->items * V->item_size;
     Q->first = memmove( V->base, Q->first, bytes );
-
-    V->size -= offset;
-    return 0;
+    V->size -= Q->items;
 }
 
 void enqueue( Queue* Q, void* item ) {
     Vector* V = &Q->V;
-    unsigned int first = ( (char*)Q->first - (char*)V->base ) / V->item_size;
     unsigned int type_cap = V->capacity / V->item_size;
-    unsigned int move_threshold = type_cap / 10;
 
-    if( V->size == type_cap && first >= move_threshold )
-        first = move( Q );
+    /* If more than 1/4 (left of the first item) is free: move */
+    if( V->size == type_cap && V->size - Q->items > type_cap / 4 ) 
+        move( Q );
 
-    size_t used = ( V->size - first ) * V->item_size;
-    if( V->capacity - used > 2*V->capacity / 3 ) {
-        if( first >= move_threshold )
-            first = move( Q );
-        else
-            V->base = realloc( V->base, V->capacity /= 2 );
-    }
-
+    /* Calculate first/base offset in case push causes a realloc */
+    size_t offset = (char*)Q->first - (char*)V->base;
     push( V, item );
-    Q->first = (char*)V->base + ( first * V->item_size );
+    ++Q->items;
+    Q->first = (char*)V->base + offset;
 }
 
 void* dequeue( Queue* Q ) {
-    assert( Q->V.size );
+    assert( Q->items );
 
     void* retptr = Q->first;
     Q->first = (char*)Q->first + Q->V.item_size;
-
+    --Q->items;
     return memcpy( malloc( Q->V.item_size ), retptr, Q->V.item_size );
 }

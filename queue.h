@@ -7,6 +7,7 @@
 typedef struct {
     Vector V;
     void* first;
+    unsigned int items;
 } Queue;
 
 /*

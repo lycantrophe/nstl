@@ -1,5 +1,6 @@
 #ifndef HEAP_H
 #define HEAP_H
+#include "nstl-types.h"
 #include "vector.h"
 
 /*

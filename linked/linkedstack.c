@@ -7,6 +7,10 @@ Linkedstack* linkedstack( void ) {
 
 void linkedstack_push( Linkedstack* S, void* payload ) {
     S->head = link( S->head, payload);
+
+    if(!S->size)
+      S->tail = S->head;
+
     ++S->size;
 }
 

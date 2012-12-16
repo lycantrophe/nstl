@@ -3,12 +3,9 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include "list.h"
+#include "linkpriqueue.h"
 
-typedef struct {
-    unsigned int size;
-    List* head;
-} Linkedstack;
+typedef Lpriqueue Linkedstack;
 
 Linkedstack* linkedstack( void );
 void linkedstack_push( Linkedstack*, void* );

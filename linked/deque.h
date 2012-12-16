@@ -8,7 +8,7 @@
  * O(1) linked list dequeue implementation.
  */
 
-#define Deque Lpriqueue
+typedef Lpriqueue Deque;
 
 
 /*

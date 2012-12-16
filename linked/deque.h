@@ -2,16 +2,14 @@
 #define DEQUE_H
 
 #include "list.h"
+#include "linkpriqueue.h"
 
 /*
  * O(1) linked list dequeue implementation.
  */
 
-typedef struct {
-    unsigned int size;
-    List* head;
-    List* tail;
-} Deque;
+#define Deque Lpriqueue
+
 
 /*
  * Constructs a default Deque object.

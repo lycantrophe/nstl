@@ -10,6 +10,7 @@
  */
 
 static unsigned int seeded = 0;
+static unsigned int insertion_sort_threshold = 32;
 
 static unsigned int random( unsigned int from, unsigned int to ) {
     if( !seeded ) srand( time( NULL ) );
@@ -55,6 +56,10 @@ static inline unsigned int __partition( void* A, size_t typesize, unsigned int l
     return index;
 }
 
+void set_insertion_threshold( unsigned int threshold ) {
+    insertion_sort_threshold = threshold;
+}
+
 void insertion_sort( void* A, size_t typesize, unsigned int first, unsigned int last, cmp lt ) {
     void* item = malloc( typesize );
     for( unsigned int i = first + 1; i < last; ++i ) {
@@ -88,7 +93,7 @@ void quick_sort( void* A, size_t typesize, int first, int last, cmp lt ) {
         return;
 
     /* For small arrays: use insertion sort */
-    if( last - first < 33 ) {
+    if( last - first <= (int)insertion_sort_threshold ) {
         insertion_sort( A, typesize, first, last, lt );
         return;
     }

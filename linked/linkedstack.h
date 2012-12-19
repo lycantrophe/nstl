@@ -10,5 +10,6 @@ typedef Lpriqueue Linkedstack;
 Linkedstack* linkedstack( void );
 void linkedstack_push( Linkedstack*, void* );
 void* linkedstack_pop( Linkedstack* );
+void* linkedstack_peek( Linkedstack* );
 
 #endif //LINKEDSTACK_H

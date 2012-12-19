@@ -26,3 +26,8 @@ void* linkedstack_pop( Linkedstack* S ) {
 
     return retptr;
 }
+
+void* linkedstack_peek( Linkedstack *S ) {
+    assert( S->head );
+    return S->head->payload;
+}

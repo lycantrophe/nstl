@@ -5,16 +5,16 @@ Linkedstack* linkedstack( void ) {
     return S = calloc( 1, sizeof(Linkedstack) );
 }
 
-void linkedstack_push( Linkedstack* S, void* payload ) {
+void linkedpush( Linkedstack* S, void* payload ) {
     S->head = link( S->head, payload);
 
     if(!S->size)
-      S->tail = S->head;
+        S->tail = S->head;
 
     ++S->size;
 }
 
-void* linkedstack_pop( Linkedstack* S ) {
+void* linkedpop( Linkedstack* S ) {
     assert( S->size );
 
     void* retptr;
@@ -27,7 +27,7 @@ void* linkedstack_pop( Linkedstack* S ) {
     return retptr;
 }
 
-void* linkedstack_peek( Linkedstack *S ) {
+void* linkedpeek( Linkedstack* S ) {
     assert( S->head );
     return S->head->payload;
 }

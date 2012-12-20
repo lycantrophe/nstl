@@ -6,7 +6,7 @@ Linkedstack* linkedstack( void ) {
 
 void linkedpush( Linkedstack* S, void* payload ) {
     S->head = link( S->head, payload);
-    if( !S->size ) S->tail = S->head;
+    if(!S->size) S->tail = S->head;
     ++S->size;
 }
 
@@ -18,4 +18,9 @@ void* linkedpop( Linkedstack* S ) {
     List* head = S->head;
     S->head = head->prev;
     return unlink( head );
+}
+
+void* linkedpeek( Linkedstack* S ) {
+    assert( S->head );
+    return S->head->payload;
 }

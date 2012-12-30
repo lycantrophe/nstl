@@ -2,8 +2,14 @@
 #include <assert.h>
 #include "list.h"
 
-List* link( List* node, void* payload ) {
-    List* link = calloc( 1, sizeof( List ) );
+struct List {
+    void* payload;
+    struct List* next;
+    struct List* prev;
+};
+
+struct List* link( struct List* node, void* payload ) {
+    struct List* link = calloc( 1, sizeof( List ) );
     link->payload = payload;
 
     if( !node ) return link;
@@ -15,7 +21,7 @@ List* link( List* node, void* payload ) {
     return link;
 }
 
-void* unlink( List* node ) {
+void* unlink( struct List* node ) {
     assert( node );
     void* payload = node->payload;
 
@@ -27,4 +33,30 @@ void* unlink( List* node ) {
 
     free( node );
     return payload;
+}
+
+struct List* follow( struct List* list ) {
+    assert( list );
+    return list->next;
+}
+
+struct List* reverse( struct List* L ) {
+    assert( L );
+    return L->prev;
+}
+
+void* get_payload( struct List* list ) {
+    assert( list );
+    return list->payload;
+}
+
+/* Creates a regular list element, but binds next/prev to itself.
+ * Link handles the circular property automatically
+ */
+Circular* circular( void* payload ) {
+    Circular* circ = malloc( sizeof( Circular ) );
+    circ->next = circ;
+    circ->prev = circ;
+    circ->payload = payload;
+    return circ;
 }

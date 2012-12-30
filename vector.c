@@ -2,9 +2,19 @@
 #include <string.h>
 #include <assert.h>
 #include "vector.h"
-#include "vector-private.h"
+#include "stack.h"
+#include "queue.h"
 
-Vector* __initialize_vector( Vector* V, size_t typesize, unsigned int icap ) {
+#define EXTRA_ALLOC_LIMIT 32
+
+struct Vector {
+    void* base;
+    unsigned int size;
+    size_t capacity;
+    size_t item_size;
+};
+
+struct Vector* __initialize_vector( struct Vector* V, size_t typesize, unsigned int icap ) {
     V->base = malloc( icap * typesize );
     V->capacity = icap * typesize;
     V->size = 0;
@@ -12,11 +22,11 @@ Vector* __initialize_vector( Vector* V, size_t typesize, unsigned int icap ) {
     return V;
 }
 
-Vector* vector( size_t typesize, unsigned int icap ) {
-    return __initialize_vector( malloc( sizeof( Vector ) ), typesize, icap );
+struct Vector* vector( size_t typesize, unsigned int icap ) {
+    return __initialize_vector( malloc( sizeof( struct Vector ) ), typesize, icap );
 }
 
-void push( Vector* V, void* item ) {
+void push( struct Vector* V, void* item ) {
     /* When all free slots have been filled -
      * double capacity.
      */
@@ -31,17 +41,17 @@ void push( Vector* V, void* item ) {
     ++V->size;
 }
 
-void* at( Vector* V, unsigned int index ) {
+void* at( struct Vector* V, unsigned int index ) {
     assert( index <= V->size );
     return (char*)V->base + ( V->item_size * index );
 }
 
-void* get( Vector* V, unsigned int index ) {
+void* get( struct Vector* V, unsigned int index ) {
     assert( index <= V->size );
     return memcpy( malloc( V->item_size ), at( V, index ), V->item_size );
 }
 
-void insert_vector( Vector* orig, Vector* ins, unsigned int pos ) {
+void insert_vector( struct Vector* orig, struct Vector* ins, unsigned int pos ) {
     assert( orig->item_size == ins->item_size );
     assert( pos <= orig->size );
 
@@ -73,4 +83,84 @@ void insert_vector( Vector* orig, Vector* ins, unsigned int pos ) {
     orig->base = base;
     orig->capacity = new_capacity;
     orig->size = orig->size + ins->size;
+}
+
+unsigned int vector_size( struct Vector* V ) {
+    return V->size;
+}
+
+void* destroy_vector( struct Vector* V, void (*F)( void* ) ) {
+    void* ptr = V->base;
+    for( unsigned int i = 0; i < V->size; ++i, ptr = (char*)ptr + V->item_size )
+        F( ptr );
+
+    free( V->base );
+    return NULL;
+}
+
+/*
+ * STACK
+ */
+
+void* pop( Vector* V ) {
+    /* Frees some memory if less than 2/3
+     * of the allocated space is being used 
+     */
+    if( V->capacity - ( V->size * V->item_size ) > 2*V->capacity / 3 ) {
+        V->capacity /= 2;
+        V->base = realloc( V->base, V->capacity );
+    }
+
+    void* retptr = (char*)V->base + ( --( V->size ) * V->item_size );
+    return memcpy( malloc( V->item_size ), retptr, V->item_size );
+}
+
+/*
+ * QUEUE
+ */
+
+struct Queue {
+    Vector* V;
+    void* first;
+    unsigned int items;
+};
+
+Queue* queue( size_t typesize, unsigned int icap ) {
+    Queue* Q = malloc( sizeof( Queue ) );
+    __initialize_vector( &Q->V, typesize, icap );
+    Q->items = Q->V.size; // = 0;
+    Q->first = Q->V.base;
+    return Q;
+}
+
+static inline void move( Queue* Q ) {
+    Vector* V = &Q->V;
+
+    size_t bytes = Q->items * V->item_size;
+    Q->first = memmove( V->base, Q->first, bytes );
+    V->size -= Q->items;
+}
+
+void enqueue( Queue* Q, void* item ) {
+    Vector* V = &Q->V;
+    unsigned int type_cap = V->capacity / V->item_size;
+
+    /* If more than 1/4 (left of the first item) is free: move */
+    if( V->size == type_cap && V->size - Q->items > type_cap / 4 ) 
+        move( Q );
+
+    /* Calculate first/base offset in case push causes a realloc */
+    size_t offset = (char*)Q->first - (char*)V->base;
+    push( V, item );
+    ++Q->items;
+    Q->first = (char*)V->base + offset;
+}
+
+void* dequeue( Queue* Q ) {
+    assert( Q->items );
+
+    void* retptr = Q->first;
+    Q->first = (char*)Q->first + Q->V.item_size;
+    --Q->items;
+    return memcpy( malloc( Q->V.item_size ), retptr, Q->V.item_size );
 }

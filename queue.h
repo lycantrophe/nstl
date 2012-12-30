@@ -4,11 +4,8 @@
 #include <string.h>
 #include "vector.h"
 
-typedef struct {
-    Vector V;
-    void* first;
-    unsigned int items;
-} Queue;
+struct Queue;
+typedef struct Queue Queue;
 
 /*
  * Creates a new queue

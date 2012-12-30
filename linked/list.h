@@ -1,11 +1,8 @@
 #ifndef LINKEDLIST_H
 #define LINKEDLIST_H
 
-typedef struct List {
-    void* payload;
-    struct List* next;
-    struct List* prev;
-} List;
+struct List;
+typedef struct List List;
 
 /*
  * Creates a new node with the passed payload and appends it onto the given

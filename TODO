@@ -1,6 +1,5 @@
 Planned features:
 
-* Queue (assigned to: Yggdrasill)
-* Heap (assigned to: lyc)
-* Linked list
 * Sorts.
+* Consider adding a vector insert feature (inserts a single item that
+overwrites at a given position )

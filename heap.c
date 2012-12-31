@@ -2,7 +2,10 @@
 #include <assert.h>
 #include "nstl-types.h"
 #include "heap.h"
+#include "stack.h"
 #include "vector.h"
+
+size_t __vector_item_size( Vector* V );
 
 /* Calculate parent index */
 static inline unsigned int __heap_parent( unsigned int i ) {
@@ -35,7 +38,7 @@ static void heapify( Vector* V, cmp compare, unsigned int i ) {
     unsigned int child = __heap_left( i );
 
     /* Work with parent or left child? */
-    if( child < V->size ) {
+    if( child < vector_size( V ) ) {
         void* left = at( V, child );
         if( compare( parent, left ) ) {
             largest = left;
@@ -44,7 +47,7 @@ static void heapify( Vector* V, cmp compare, unsigned int i ) {
     }
 
     /* Work with right child? */
-    if( ++child < V->size ) {
+    if( ++child < vector_size( V ) ) {
         void* right = at( V, child );
         if( compare( largest, right ) ) {
             largest = right;
@@ -53,13 +56,13 @@ static void heapify( Vector* V, cmp compare, unsigned int i ) {
     }
 
     if( largest != parent ) {
-        swap( parent, largest, V->item_size );
+        swap( parent, largest, __vector_item_size( V ) );
         heapify( V, compare, largest_index );
     }
 }
 
 void heap( Vector* V, cmp compare ) {
-    int floor = V->size / 2;
+    int floor = vector_size( V ) / 2;
     for( int i = floor; i >= 0; --i )
         heapify( V, compare, i );
 }
@@ -67,24 +70,24 @@ void heap( Vector* V, cmp compare ) {
 static void heap_increase_key( Vector* V, cmp compare, unsigned int i, void* key ) {
     assert( !compare( key, at( V, i ) ) );
 
-    memcpy( ((char*)V->base) + ( i * V->item_size ), key, V->item_size );
+    memcpy( at( V, i ), key, __vector_item_size( V ) );
     /* V[ parent(i) ] < V[ i ] */
     while( i > 0 && compare( at( V, __heap_parent( i ) ), at( V, i ) ) ) {
-        swap( at( V, __heap_parent( i ) ), at( V, i ), V->item_size );
+        swap( at( V, __heap_parent( i ) ), at( V, i ),
+                __vector_item_size( V ) );
         i = __heap_parent( i );
     }
 }
 
 void heappush( Vector* V, cmp compare, void* item ) {
     push( V, item );
-    heap_increase_key( V, compare, V->size - 1, item );
+    heap_increase_key( V, compare, vector_size( V ) - 1, item );
 }
 
 void* heappop( Vector* V, cmp compare ) {
     void* max = get( V, 0 );
-    /* Move all memory left and reduce heap size */
-    memmove( V->base, (char*)V->base + ( ( --V->size ) * V->item_size ),
-            V->item_size );
+    /* Move item left and reduce heap size */
+    memmove( at( V, 0 ), pop( V ), __vector_item_size( V ) );
 
     heapify( V, compare, 0 );
     return max;

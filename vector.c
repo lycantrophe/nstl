@@ -127,14 +127,23 @@ struct Queue {
 
 Queue* queue( size_t typesize, unsigned int icap ) {
     Queue* Q = malloc( sizeof( Queue ) );
-    __initialize_vector( &Q->V, typesize, icap );
-    Q->items = Q->V.size; // = 0;
-    Q->first = Q->V.base;
+    Q->V = malloc( sizeof( Vector ) );
+    __initialize_vector( Q->V, typesize, icap );
+    Q->items = Q->V->size; // = 0;
+    Q->first = Q->V->base;
+    return Q;
+}
+
+Queue* vtoq( Vector* V ) {
+    Queue* Q = malloc( sizeof( Queue ) );
+    Q->V = V;
+    Q->items = V->size;
+    Q->first = V->base;
     return Q;
 }
 
 static inline void move( Queue* Q ) {
-    Vector* V = &Q->V;
+    Vector* V = Q->V;
 
     size_t bytes = Q->items * V->item_size;
     Q->first = memmove( V->base, Q->first, bytes );
@@ -142,7 +151,7 @@ static inline void move( Queue* Q ) {
 }
 
 void enqueue( Queue* Q, void* item ) {
-    Vector* V = &Q->V;
+    Vector* V = Q->V;
     unsigned int type_cap = V->capacity / V->item_size;
 
     /* If more than 1/4 (left of the first item) is free: move */
@@ -160,7 +169,19 @@ void* dequeue( Queue* Q ) {
     assert( Q->items );
 
     void* retptr = Q->first;
-    Q->first = (char*)Q->first + Q->V.item_size;
+    Q->first = (char*)Q->first + Q->V->item_size;
     --Q->items;
-    return memcpy( malloc( Q->V.item_size ), retptr, Q->V.item_size );
+    return memcpy( malloc( Q->V->item_size ), retptr, Q->V->item_size );
+}
+
+/*
+ * Privates
+ */
+
+size_t __vector_item_size( Vector* V ) {
+    return V->item_size;
+}
+
+size_t __queue_item_size( Queue* Q ) {
+    return Q->V->item_size;
 }

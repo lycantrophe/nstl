@@ -2,8 +2,6 @@
 #define VECTOR_H
 #include <stdlib.h>
 
-#define EXTRA_ALLOC_LIMIT 32
-
 // Concatenates two vectors
 #define concat(V1, V2) insert_vector(V1,V2,V1->size)
 
@@ -17,7 +15,7 @@ typedef struct Vector Vector;
 extern struct Vector* vector( size_t typesize, unsigned int icap );
 
 /*
- * Insert an element at the back of the vector.
+ * Insert an element at the back of the vector. Copies the void* content
  */
 extern void push( struct Vector*, void* );
 

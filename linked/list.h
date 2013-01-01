@@ -16,5 +16,22 @@ extern List* link( List* list, void* payload );
  */
 extern void* unlink( List* );
 
+/*
+ * Jumps to the next item in the linked list. Returns
+ * NULL if there is no further to go. (i.e. is tail)
+ */
+extern List* follow( List* list );
+
+/*
+ * Jumps to the previous item in the linked list. Returns
+ * NULL if it is head.
+ */
+extern List* reverse( List* list );
+
+/*
+ * Returns the payload of the given list item.
+ */
+extern void* get_payload( List* list );
+
 
 #endif //LINKEDLIST_H

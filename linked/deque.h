@@ -2,13 +2,13 @@
 #define DEQUE_H
 
 #include "list.h"
-#include "linkpriqueue.h"
 
 /*
  * O(1) linked list dequeue implementation.
  */
 
-typedef Lpriqueue Deque;
+struct Lpriqueue;
+typedef struct Lpriqueue Deque;
 
 
 /*
@@ -26,5 +26,10 @@ extern void deenqueue( Deque*, void* );
  * by one. Will fail if queue is empty.
  */
 extern void* dedequeue( Deque* );
+
+/*
+ * Pops and returns the payload of the last element in the queue
+ */
+extern void* depop( Deque* );
 
 #endif //DEQUE_H

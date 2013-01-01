@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "list.h"
+#include "circular.h"
 
 struct List {
     void* payload;

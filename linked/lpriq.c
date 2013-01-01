@@ -2,6 +2,8 @@
 #include "linkedstack.h"
 #include "deque.h"
 
+List* backtrack( List* );
+
 struct Lpriqueue {
     unsigned int size;
     List* head;

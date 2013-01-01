@@ -3,9 +3,9 @@
 
 #include <stdlib.h>
 #include <assert.h>
-#include "linkpriqueue.h"
 
-typedef Lpriqueue Linkedstack;
+struct Lpriqueue;
+typedef struct Lpriqueue Linkedstack;
 
 Linkedstack* linkedstack( void );
 void linkedpush( Linkedstack*, void* );

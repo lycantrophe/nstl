@@ -95,6 +95,7 @@ void* destroy_vector( struct Vector* V, void (*F)( void* ) ) {
         F( ptr );
 
     free( V->base );
+    free( V );
     return NULL;
 }
 

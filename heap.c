@@ -87,7 +87,9 @@ void heappush( Vector* V, cmp compare, void* item ) {
 void* heappop( Vector* V, cmp compare ) {
     void* max = get( V, 0 );
     /* Move item left and reduce heap size */
-    memmove( at( V, 0 ), pop( V ), __vector_item_size( V ) );
+    void* last = pop( V );
+    memmove( at( V, 0 ), last, __vector_item_size( V ) );
+    free( last );
 
     heapify( V, compare, 0 );
     return max;

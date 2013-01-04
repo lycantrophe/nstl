@@ -4,6 +4,22 @@
 #include "../nstl-types.h"
 #include "redblack.h"
 
+typedef enum { RED, BLACK } RBCOLOR;
+
+typedef struct Rbnode {
+    RBCOLOR color;
+    void* key;
+    void* payload;
+    struct Rbnode* left;
+    struct Rbnode* right;
+    struct Rbnode* parent;
+} Rbnode;
+
+struct Red_black {
+    Rbnode* root;
+    cmp lt;
+};
+
 static inline Rbnode* __tree_min( Rbnode* x ) {
     while( x->left )
         x = x->left;

@@ -3,26 +3,13 @@
 
 #include "../nstl-types.h"
 
-typedef enum { RED, BLACK } RBCOLOR;
-
 /*
  * A node with a payload pointer. Can be used for regular trees and map
  * lookups. Can be used for a key/value structure
  */
 
-typedef struct Rbnode {
-    RBCOLOR color;
-    void* key;
-    void* payload;
-    struct Rbnode* left;
-    struct Rbnode* right;
-    struct Rbnode* parent;
-} Rbnode;
-
-typedef struct {
-    Rbnode* root;
-    cmp lt;
-} Red_black;
+struct Red_black;
+typedef struct Red_black Red_black;
 
 /*
  * Initialize a new red black tree and saves its comparator.

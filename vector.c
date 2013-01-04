@@ -91,8 +91,9 @@ unsigned int vector_size( struct Vector* V ) {
 
 void* destroy_vector( struct Vector* V, void (*F)( void* ) ) {
     void* ptr = V->base;
-    for( unsigned int i = 0; i < V->size; ++i, ptr = (char*)ptr + V->item_size )
-        F( ptr );
+    if( F ) 
+        for( unsigned int i = 0; i < V->size; ++i, ptr = (char*)ptr + V->item_size )
+            F( ptr );
 
     free( V->base );
     free( V );
@@ -175,6 +176,12 @@ void* dequeue( Queue* Q ) {
     return memcpy( malloc( Q->V->item_size ), retptr, Q->V->item_size );
 }
 
+void* destroy_queue( struct Queue* Q, void (*F)( void* ) ) {
+    destroy_vector( Q->V, F );
+    free( Q );
+    return NULL;
+}
+
 /*
  * Privates
  */
@@ -186,3 +193,4 @@ size_t __vector_item_size( Vector* V ) {
 size_t __queue_item_size( Queue* Q ) {
     return Q->V->item_size;
 }
+

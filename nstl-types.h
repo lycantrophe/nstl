@@ -6,5 +6,11 @@
  */
 
 typedef unsigned short (*cmp)(void*,void*);
+typedef void (*destructor)(void*);
+
+typedef struct {
+    destructor key;
+    destructor payload;
+} destroy_associative;
 
 #endif //NSTL_H

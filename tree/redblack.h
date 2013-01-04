@@ -3,6 +3,9 @@
 
 #include "../nstl-types.h"
 
+#define destroy_rb(RB) destroy_rb1(RB)
+#define destroy_rb(RB,D) destroy_rb2(RB,D)
+
 /*
  * A node with a payload pointer. Can be used for regular trees and map
  * lookups. Can be used for a key/value structure
@@ -38,5 +41,14 @@ extern void* rb_remove( Red_black*, void* key );
  * not in the tree.
  */
 extern void* rb_get( Red_black*, void* key );
+
+/*
+ * Destroys the red-black tree and frees all its data. 
+ * If destroy_associative is NULL, free is called at both key and element. If
+ * either of the FPs are NULL then free will be called on their respective
+ * objects. Otherwise the respective element will be given to the approperiate
+ * destructor function. Returns NULL.
+ */
+extern void* destroy_rb( Red_black*, destroy_associative* );
 
 #endif //REDBLACK_H

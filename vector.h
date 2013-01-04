@@ -48,6 +48,6 @@ extern unsigned int vector_size( struct Vector* );
  * simple types without heap memory. Frees the vectors memory. Always returns
  * NULL
  */
-extern void* destroy_vector( struct Vector* V, void (*)( void* ) );
+extern void* destroy_vector( struct Vector* V, destructor );
 
 #endif //VECTOR_H

@@ -23,4 +23,6 @@ extern void enqueue( Queue*, void* );
  */
 extern void* dequeue( Queue* );
 
+extern void* destroy_queue( Queue*, destructor );
+
 #endif //QUEUE_H

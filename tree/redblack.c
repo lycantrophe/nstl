@@ -321,3 +321,64 @@ void* rb_get( Red_black* rbt, void* key ) {
     return node ? node->payload : NULL;
 }
 
+static inline void __walk1( Rbnode* rb ) {
+    if( rb == NULL )
+        return;
+
+    __walk1( rb->left );
+    __walk1( rb->right );
+
+    free( rb->payload );
+    free( rb->key );
+    free( rb );
+}
+
+static inline void __walk2( Rbnode* rb, destroy D ) {
+    if( rb == NULL )
+        return;
+
+    __walk2( rb->left, D );
+    __walk2( rb->right, D );
+
+    D( rb->payload );
+    free( rb->key );
+    free( rb );
+}
+
+static inline void __walk3( Rbnode* rb, destroy K ) {
+    if( rb == NULL )
+        return;
+
+    __walk3( rb->left, K );
+    __walk3( rb->right, K );
+
+    free( rb->payload );
+    K( rb->key );
+    free( rb );
+}
+
+static inline void __walk4( Rbnode* rb, destroy K, destroy D ) {
+    if( rb == NULL )
+        return;
+
+    __walk4( rb->left, K, D );
+    __walk4( rb->right, K, D );
+
+    D( rb->payload );
+    K( rb->key );
+    free( rb );
+}
+
+void destroy_rb( Red_black* rbt, destroy_associative* destroy ) {
+    if( !destroy || ( !destroy->payload && !destroy->key ) )
+        __walk1( rbt->root );
+    else if( destroy->payload && !destroy->key )
+        __walk2( rbt->root, destroy->payload );
+    else if( destroy->key && !destroy->payload )
+        __walk3( rbt->root, destroy->key );
+    else if( destroy->key && destroy->payload )
+        __walk4( rbt->root, destroy->key, destroy->payload );
+
+    free( rbt );
+    return NULL;
+}

@@ -2,7 +2,8 @@
 #define STACK_H
 #include "vector.h"
 
-#define stack(typesize, icap) vector(typesize,icap);
+#define stack(typesize, icap) vector(typesize,icap)
+#define destroy_stack(stack, destructor) destroy_vector(stack, destructor)
 
 typedef Vector Stack;
 

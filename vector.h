@@ -1,6 +1,7 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 #include <stdlib.h>
+#include "nstl-types.h"
 
 // Concatenates two vectors
 #define concat(V1, V2) insert_vector(V1,V2,V1->size)

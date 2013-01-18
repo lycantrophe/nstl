@@ -117,6 +117,10 @@ void* pop( Vector* V ) {
     return memcpy( malloc( V->item_size ), retptr, V->item_size );
 }
 
+void* peek( Vector* V ) {
+    return at( V, V->size - 1 );
+}
+
 /*
  * QUEUE
  */

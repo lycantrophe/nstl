@@ -16,6 +16,18 @@ typedef struct Vector Vector;
 extern struct Vector* vector( size_t typesize, unsigned int icap );
 
 /*
+ * Creates a vector from an array. Requires exact vector size (alloc'd area),
+ * element size (sizeof) and number of elements, counting from 0.
+ */
+extern struct Vector* atov( void* array, size_t alloced, size_t typesize, unsigned int size );
+
+/*
+ * Works exactly like atov, but takes ownership of the passed array and uses it
+ * for its underlying data. Avoids copying.
+ */
+extern struct Vector* atovown( void* array, size_t alloced, size_t typesize, unsigned int size );
+
+/*
  * Insert an element at the back of the vector. Copies the void* content
  */
 extern void push( struct Vector*, void* );

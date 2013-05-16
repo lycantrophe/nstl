@@ -41,6 +41,21 @@ void push( struct Vector* V, void* item ) {
     ++V->size;
 }
 
+struct Vector* atov( void* array, size_t alloced, size_t typesize, unsigned int size ) {
+    return atovown( memcpy( malloc( alloced ), array, typesize * size ),
+            alloced, typesize, size );
+}
+
+struct Vector* atovown( void* array, size_t alloced, size_t typesize, unsigned int size ) {
+    Vector* V = malloc( sizeof( struct Vector ) );
+    V->size = size;
+    V->item_size = typesize;
+    V->capacity = alloced;
+    V->base = array;
+
+    return V;
+}
+
 void* at( struct Vector* V, unsigned int index ) {
     assert( index <= V->size );
     return (char*)V->base + ( V->item_size * index );
